@@ -2,15 +2,15 @@ package com.stepcounter;
 
 import androidx.annotation.NonNull;
 
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.module.annotations.ReactModule;
 
-public class StepCounterModule extends StepCounterSpec {
+@ReactModule(name = StepCounterModule.NAME)
+public class StepCounterModule extends NativeStepCounterSpec {
   public static final String NAME = "StepCounter";
 
-  StepCounterModule(ReactApplicationContext context) {
-    super(context);
+  public StepCounterModule(ReactApplicationContext reactContext) {
+    super(reactContext);
   }
 
   @Override
@@ -22,8 +22,8 @@ public class StepCounterModule extends StepCounterSpec {
 
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
-  @ReactMethod
-  public void multiply(double a, double b, Promise promise) {
-    promise.resolve(a * b);
+  @Override
+  public double multiply(double a, double b) {
+    return a * b;
   }
 }

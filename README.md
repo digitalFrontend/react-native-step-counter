@@ -10,12 +10,13 @@ npm install react-native-step-counter
 
 ## Usage
 
+
 ```js
 import { multiply } from 'react-native-step-counter';
 
 // ...
 
-const result = await multiply(3, 7);
+const result = multiply(3, 7);
 ```
 
 ## Contributing
