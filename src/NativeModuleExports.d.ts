@@ -11,6 +11,7 @@ declare const NativeModuleExports: {
     dropDBs: () => void
     getAllDetailedRecords: () => Promise<any>
     getAllRecords: () => Promise<any>
+    openAppSettings: () => void
     subscribe: (callback: Function) => () => void
 }
 export default NativeModuleExports

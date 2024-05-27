@@ -5,6 +5,7 @@ declare const StepCounter: {
     isActive: () => Promise<any>
     isActiveBackgroundService: () => Promise<any>
     onStepUpdates: (callback: Function) => () => void
+    openAppSettings: () => void
     android: {
         startBackgroundService: () => Promise<any>
         stopBackgroundService: () => void

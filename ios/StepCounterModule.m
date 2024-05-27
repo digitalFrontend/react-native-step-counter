@@ -14,6 +14,8 @@
                       withResolver: (RCTPromiseResolveBlock)resolve
                       withRejecter: (RCTPromiseRejectBlock)reject)
 
+    RCT_EXTERN_METHOD(openAppSettings)
+
     RCT_EXTERN_METHOD(startStepCounterUpdate)
 
     RCT_EXTERN_METHOD(stopStepCounterUpdate)

@@ -52,6 +52,13 @@ class StepCounterModule: RCTEventEmitter {
     }
     
     @objc
+    func openAppSettings() {
+        DispatchQueue.main.async {
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+       }
+    }
+    
+    @objc
     func startStepCounterUpdate() {
         DispatchQueue.main.async {
             self.stepUpdateActive = true

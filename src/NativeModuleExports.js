@@ -40,6 +40,9 @@ const NativeModuleExports = {
     getAllRecords: async () => {
         return await Module.getAllRecords()
     },
+    openAppSettings: () => {
+        Module.openAppSettings()
+    },
     subscribe: (callback) => {
         let unsubs = []
         let unsub = eventEmitter.addListener('onStepsChanged', (data) => {

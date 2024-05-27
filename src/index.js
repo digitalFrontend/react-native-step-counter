@@ -49,12 +49,16 @@ const StepCounter = {
         if (Platform.OS == 'android') {
             return await NativeModuleExports.askPermissions()
         } else {
-            let date1 = new Date()
-            date1.setMinutes(0)
-            let date2 = new Date()
-            date2.setMinutes(1)
-            let queryResult = await NativeModuleExports.queryStepCounterDataBetweenDates(date1.getTime(), date2.getTime())
-            return queryResult?.steps != null
+            try{
+                let date1 = new Date()
+                date1.setMinutes(0)
+                let date2 = new Date()
+                date2.setMinutes(1)
+                let queryResult = await NativeModuleExports.queryStepCounterDataBetweenDates(date1.getTime(), date2.getTime())
+                return queryResult?.steps != null
+            }catch(err){
+                return false
+            }
         }
     },
     query: async (date1, date2) => {
@@ -78,6 +82,9 @@ const StepCounter = {
             callbacks = callbacks.filter((c) => c != callback)
             deinit()
         }
+    },
+    openAppSettings: () => {
+        NativeModuleExports.openAppSettings()
     },
     android: AndroidTools
 }

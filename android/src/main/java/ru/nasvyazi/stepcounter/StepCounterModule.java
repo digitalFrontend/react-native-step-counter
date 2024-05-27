@@ -12,11 +12,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Base64;
 import android.widget.RemoteViews;
@@ -60,6 +62,7 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static android.os.Looper.getMainLooper;
 
+import static androidx.core.content.ContextCompat.startActivity;
 import static java.lang.System.currentTimeMillis;
 
 import javax.crypto.Cipher;
@@ -141,6 +144,15 @@ public class StepCounterModule extends ReactContextBaseJavaModule {
         promise.resolve(isSuccess);
       }
     });
+  }
+
+  @ReactMethod
+  public void openAppSettings(){
+    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    Uri uri = Uri.fromParts("package", this.reactContext.getPackageName(), null);
+    intent.setData(uri);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    this.reactContext.startActivity(intent);
   }
 
   @ReactMethod
