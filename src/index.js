@@ -53,7 +53,7 @@ const StepCounter = {
             date1.setMinutes(0)
             let date2 = new Date()
             date2.setMinutes(1)
-            let queryResult = await NativeModuleExports.queryStepCounterDataBetweenDates(date1, date2)
+            let queryResult = await NativeModuleExports.queryStepCounterDataBetweenDates(date1.getTime(), date2.getTime())
             return queryResult?.steps != null
         }
     },

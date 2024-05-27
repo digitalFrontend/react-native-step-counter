@@ -138,15 +138,16 @@ public class DBTools  {
   }
 
   public void getStepsByDates(long startDate, long endDate, IOnGetCount handler) {
+
     DayBorders startDateBorders = DatesTools.getDayBorders(startDate);
     DayBorders endDateBorders = DatesTools.getDayBorders(endDate);
     long currentTime = DatesTools.getCurrentTimeInMs();
     DayBorders currentTimeBorders = DatesTools.getDayBorders(currentTime);
 
     if (currentTimeBorders.start <= startDateBorders.start){
-      getCountDetailedByDates(currentTimeBorders.start, currentTimeBorders.end, handler);
+      getCountDetailedByDates(startDate, endDate, handler);
     } else {
-      Boolean countToday = endDateBorders.end >= currentTimeBorders.end;
+      boolean countToday = endDateBorders.end >= currentTimeBorders.end;
 
       getCountByDates(startDateBorders.start, countToday ? DatesTools.addDays(currentTimeBorders.start, -1) : endDateBorders.end, count -> {
         if (countToday){
