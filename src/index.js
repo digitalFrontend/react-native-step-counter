@@ -43,7 +43,8 @@ const deinit = () => {
 
 const StepCounter = {
     isSupported: async () => {
-        return await NativeModuleExports.isStepCountingSupported()
+        let res = await NativeModuleExports.isStepCountingSupported()
+        return res
     },
     askPermissions: async () => {
         if (Platform.OS == 'android') {

@@ -2,6 +2,7 @@ package ru.nasvyazi.stepcounter.service;
 
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -33,51 +34,66 @@ import androidx.core.app.NotificationCompat;
 
 import ru.nasvyazi.stepcounter.R;
 import ru.nasvyazi.stepcounter.counter.Counter;
+import ru.nasvyazi.stepcounter.tools.PermissionsUtils;
 
 
 public class BackgroundService extends Service {
   private Looper serviceLooper;
   private ServiceHandler serviceHandler;
   private Counter counter = null;
+  private final String PERMISSION_FOR_WORK = Manifest.permission.ACTIVITY_RECOGNITION;
 
 
   private final class ServiceHandler extends Handler {
 
     private Context mContext;
+    private PermissionsUtils permissionsUtils = null;
+
     public ServiceHandler(Looper looper, Context context) {
       super(looper);
       mContext = context;
+
+      this.permissionsUtils = new PermissionsUtils();
     }
+
     @SuppressLint("WrongConstant")
     @Override
     public void handleMessage(Message msg) {
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        String CHANNEL_ID = "my_channel_01";
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-          "Channel human readable title",
-          NotificationManager.IMPORTANCE_DEFAULT);
+      counter = new Counter(this.mContext);
+      if (this.permissionsUtils.isNeedRequestPermission(PERMISSION_FOR_WORK, this.mContext)){
+        stopSelf();
+      } else {
+        counter = new Counter(mContext);
 
-        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          String CHANNEL_ID = "stepcounter_channel";
+          NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+            "Служба подсчета шагов",
+            NotificationManager.IMPORTANCE_DEFAULT);
 
-        Integer appIcon = null;
+          ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
 
-        try {
-          Resources res = this.mContext.getResources();
-          appIcon = res.getIdentifier("push_notification_icon", "drawable", this.mContext.getPackageName());
-        } catch (Exception e1) {
-          Log.i("StepCounter", e1.getLocalizedMessage());
-        }
-        Notification notification = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-          .setContentTitle("Ведем подсчет!")
-          .setSmallIcon(appIcon)
-          .setContentText("Ни один ваш шаг не будет пропущен! Постарайтесь!").build();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          startForeground(1, notification, FOREGROUND_SERVICE_TYPE_HEALTH);
-        } else {
-          startForeground(1, notification);
+          Integer appIcon = null;
+
+          try {
+            Resources res = this.mContext.getResources();
+            appIcon = res.getIdentifier("push_notification_icon", "drawable", this.mContext.getPackageName());
+          } catch (Exception e1) {
+            Log.i("StepCounter", e1.getLocalizedMessage());
+          }
+          Notification notification = new NotificationCompat.Builder(mContext, CHANNEL_ID)
+            .setContentTitle("Ведем подсчет!")
+            .setSmallIcon(appIcon)
+            .setContentText("Ни один ваш шаг не будет пропущен! Постарайтесь!").build();
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, notification, FOREGROUND_SERVICE_TYPE_HEALTH);
+          } else {
+            startForeground(1, notification);
+          }
         }
       }
+
     }
   }
 
@@ -92,8 +108,6 @@ public class BackgroundService extends Service {
 
     serviceLooper = thread.getLooper();
     serviceHandler = new ServiceHandler(serviceLooper, this);
-
-    counter = new Counter(this);
   }
 
   @Override
